@@ -1,0 +1,13 @@
+server:
+  Port: :8080
+  ReadTimeout: 10s
+  WriteTimeout: 10s
+
+postgres:
+  PostgresqlHost: postgesql
+  PostgresqlPort: 5432
+  PostgresqlUser: postgres
+  PostgresqlPassword: postgres
+  PostgresqlDbname: users
+  PostgresqlSslmode: false
+  PgDriver: pgx

@@ -14,6 +14,10 @@ type usersRepo struct {
 	db *sqlx.DB
 }
 
+func NewUserRepository(db *sqlx.DB) users.Repository {
+	return &usersRepo{db: db}
+}
+
 // GetByEmail implements users.Repository.
 func (r *usersRepo) FindByEmail(user *models.User) (*models.User, error) {
 	foundUser := &models.User{}
@@ -21,10 +25,6 @@ func (r *usersRepo) FindByEmail(user *models.User) (*models.User, error) {
 		return nil, errors.Wrap(err, "usersRepo.FindByEmail.QueryRowx")
 	}
 	return foundUser, nil
-}
-
-func NewUserRepository(db *sqlx.DB) users.Repository {
-	return &usersRepo{db: db}
 }
 
 // Create implements users.Repository.

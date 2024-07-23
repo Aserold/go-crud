@@ -14,6 +14,10 @@ type usersUC struct {
 	usersRepo users.Repository
 }
 
+func NewUsersUseCase(cfg *config.Config, usersRepo users.Repository) users.UseCase {
+	return &usersUC{cfg: cfg, usersRepo: usersRepo}
+}
+
 // Create implements users.UseCase.
 func (u *usersUC) Create(user *models.User) (*models.User, error) {
 	existsUser, err := u.usersRepo.FindByEmail(user)
@@ -45,9 +49,10 @@ func (u *usersUC) ListUsers() (*models.UsersList, error) {
 
 // Update implements users.UseCase.
 func (u *usersUC) Update(user *models.User) (*models.User, error) {
+	existsUser, err := u.usersRepo.FindByEmail(user)
+	if existsUser != nil || err == nil {
+		return nil, httpErrors.NewRestErrorWithMessage(http.StatusBadRequest, httpErrors.ErrEmailAlreadyExists, nil)
+	}
+	
 	return u.usersRepo.Update(user)
-}
-
-func NewUsersUseCase(cfg *config.Config, usersRepo users.Repository) users.UseCase {
-	return &usersUC{cfg: cfg, usersRepo: usersRepo}
 }
